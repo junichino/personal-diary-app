@@ -1,0 +1,37 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    volumes:
+      - diary-data:/app/data
+      - diary-uploads:/app/uploads
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - DATABASE_PATH=/app/data/diary.sqlite
+      - UPLOAD_DIR=/app/uploads
+      - SESSION_SECRET=${SESSION_SECRET}
+      - PIN_SALT_ROUNDS=12
+      - SESSION_EXPIRY_HOURS=72
+      - RATE_LIMIT_TTL=60
+      - RATE_LIMIT_MAX=100
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:3001/api/v1
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  diary-data:
+  diary-uploads:
