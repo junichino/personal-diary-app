@@ -13,13 +13,19 @@ import {
   Affix,
   ActionIcon,
 } from '@mantine/core';
+import { useDebouncedValue } from '@mantine/hooks';
 import { IconNotebook, IconPencilPlus } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import { useDiaryEntries } from '@/hooks/use-diary';
 import { DiaryCard } from '@/components/diary/DiaryCard';
+import { useAppStore } from '@/stores/app.store';
 
 export default function FeedPage() {
   const router = useRouter();
+  const searchQuery = useAppStore((s) => s.searchQuery);
+  const [debouncedSearch] = useDebouncedValue(searchQuery, 400);
+
+  const queryParams = debouncedSearch ? { search: debouncedSearch } : undefined;
   const {
     data,
     isLoading,
@@ -27,7 +33,7 @@ export default function FeedPage() {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
-  } = useDiaryEntries();
+  } = useDiaryEntries(queryParams);
 
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadMoreRef = useCallback(

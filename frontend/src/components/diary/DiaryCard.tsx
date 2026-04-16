@@ -175,7 +175,7 @@ export function DiaryCard({ entry }: DiaryCardProps) {
 
       {renderMediaGallery()}
 
-      {entry.tags.length > 0 && (
+      {entry.tags && entry.tags.length > 0 && (
         <Group gap="xs" mt="sm">
           {entry.tags.map((tag) => (
             <Badge key={tag.id} variant="light" color={tag.color} size="sm">

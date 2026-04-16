@@ -10,8 +10,16 @@ import {
   Button,
   Stack,
   Alert,
+  ActionIcon,
+  Group,
+  Tooltip,
 } from '@mantine/core';
-import { IconShieldLock, IconAlertCircle } from '@tabler/icons-react';
+import {
+  IconShieldLock,
+  IconAlertCircle,
+  IconEye,
+  IconEyeOff,
+} from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import { AxiosError } from 'axios';
 import { useAuthStatus, useSetupPin } from '@/hooks/use-auth';
@@ -21,6 +29,7 @@ export default function SetupPage() {
   const [pin, setPin] = useState('');
   const [confirmPin, setConfirmPin] = useState('');
   const [error, setError] = useState('');
+  const [showPin, setShowPin] = useState(false);
   const router = useRouter();
   const { data: authStatus, isLoading: isCheckingAuth } = useAuthStatus();
   const setupPin = useSetupPin();
@@ -80,16 +89,29 @@ export default function SetupPage() {
           )}
 
           <Stack gap="xs" align="center" w="100%">
-            <Text size="sm" fw={500}>
-              ตั้ง PIN
-            </Text>
+            <Group gap="xs">
+              <Text size="sm" fw={500}>
+                ตั้ง PIN
+              </Text>
+              <Tooltip label={showPin ? 'ซ่อน PIN' : 'ดู PIN'}>
+                <ActionIcon
+                  variant="subtle"
+                  color="gray"
+                  size="sm"
+                  onClick={() => setShowPin((v) => !v)}
+                  aria-label={showPin ? 'ซ่อน PIN' : 'ดู PIN'}
+                >
+                  {showPin ? <IconEyeOff size={16} /> : <IconEye size={16} />}
+                </ActionIcon>
+              </Tooltip>
+            </Group>
             <PinInput
               value={pin}
               onChange={setPin}
               length={6}
-              size="xl"
+              size="lg"
               type="number"
-              mask
+              mask={!showPin}
               oneTimeCode
               disabled={setupPin.isPending}
               aria-label="ตั้ง PIN"
@@ -104,9 +126,9 @@ export default function SetupPage() {
               value={confirmPin}
               onChange={setConfirmPin}
               length={6}
-              size="xl"
+              size="lg"
               type="number"
-              mask
+              mask={!showPin}
               disabled={setupPin.isPending}
               aria-label="ยืนยัน PIN"
             />

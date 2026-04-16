@@ -5,3 +5,14 @@ body {
   padding: 0;
 }
 
+/* Hide browser password reveal button */
+::-ms-reveal,
+::-ms-clear {
+  display: none;
+}
+
+input[type='password']::-webkit-credentials-auto-fill-button,
+input[type='password']::-webkit-clear-button {
+  display: none;
+}
+

@@ -13,7 +13,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   app.use(cookieParser());
-  app.use(helmet());
+  app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
   app.enableCors({ origin: true, credentials: true });
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));

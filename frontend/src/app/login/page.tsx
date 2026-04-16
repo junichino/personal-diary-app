@@ -78,7 +78,7 @@ export default function LoginPage() {
             onChange={setPin}
             onComplete={handleSubmit}
             length={6}
-            size="xl"
+            size="lg"
             type="number"
             mask
             oneTimeCode
@@ -96,14 +96,16 @@ export default function LoginPage() {
             เข้าสู่ระบบ
           </Button>
 
-          <Anchor
-            size="sm"
-            c="dimmed"
-            onClick={() => router.push('/setup')}
-            style={{ cursor: 'pointer' }}
-          >
-            ยังไม่มี PIN? ตั้งค่าที่นี่
-          </Anchor>
+          {authStatus && !authStatus.isSetup && (
+            <Anchor
+              size="sm"
+              c="dimmed"
+              onClick={() => router.push('/setup')}
+              style={{ cursor: 'pointer' }}
+            >
+              ยังไม่มี PIN? ตั้งค่าที่นี่
+            </Anchor>
+          )}
         </Stack>
       </Card>
     </Center>

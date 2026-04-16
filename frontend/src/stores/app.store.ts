@@ -4,12 +4,16 @@ import type { AppSettings } from '@/types';
 
 interface AppState {
   appName: string;
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
   loadSettings: () => Promise<AppSettings | null>;
   updateDarkMode: (darkMode: boolean) => Promise<void>;
 }
 
 export const useAppStore = create<AppState>((set) => ({
   appName: 'My Diary',
+  searchQuery: '',
+  setSearchQuery: (query: string) => set({ searchQuery: query }),
   loadSettings: async () => {
     try {
       const settings = await apiGet<AppSettings>('/api/v1/settings');

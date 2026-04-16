@@ -40,7 +40,8 @@ export class DiaryService {
       .createQueryBuilder('entry')
       .leftJoinAndSelect('entry.diaryTags', 'diaryTag')
       .leftJoinAndSelect('diaryTag.tag', 'tag')
-      .leftJoinAndSelect('entry.media', 'media');
+      .leftJoinAndSelect('entry.media', 'media')
+      .where('entry.deletedAt IS NULL');
 
     if (mood) {
       qb.andWhere('entry.mood = :mood', { mood });
@@ -59,8 +60,8 @@ export class DiaryService {
     }
 
     if (search) {
-      const escaped = search.replace(/[%_]/g, '\\$&');
-      qb.andWhere('entry.content LIKE :search ESCAPE "\\"', { search: `%${escaped}%` });
+      const escaped = search.replace(/[%_]/g, '!$&');
+      qb.andWhere("entry.content LIKE :search ESCAPE '!'", { search: `%${escaped}%` });
     }
 
     if (isBookmarked !== undefined) {
@@ -208,7 +209,7 @@ export class DiaryService {
 
   async remove(id: string): Promise<{ message: string }> {
     const entry = await this.findOne(id);
-    await this.diaryRepository.softRemove(entry);
+    await this.diaryRepository.softDelete(entry.id);
     return { message: 'Diary entry deleted' };
   }
 

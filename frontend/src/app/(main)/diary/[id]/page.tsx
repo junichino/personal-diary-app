@@ -151,7 +151,7 @@ export default function DiaryDetailPage() {
           </SimpleGrid>
         )}
 
-        {entry.tags.length > 0 && (
+        {entry.tags && entry.tags.length > 0 && (
           <Group gap="xs" mt="md">
             {entry.tags.map((tag) => (
               <Badge
