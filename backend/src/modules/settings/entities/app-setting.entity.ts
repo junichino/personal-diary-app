@@ -14,7 +14,12 @@ export class AppSetting {
   @Column({ name: 'pin_hash', type: 'varchar', length: 255 })
   pinHash: string;
 
-  @Column({ name: 'app_name', type: 'varchar', length: 100, default: 'My Diary' })
+  @Column({
+    name: 'app_name',
+    type: 'varchar',
+    length: 100,
+    default: 'My Diary',
+  })
   appName: string;
 
   @Column({ type: 'varchar', length: 50, default: 'Asia/Bangkok' })

@@ -32,7 +32,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
       if (typeof exceptionResponse === 'string') {
         message = exceptionResponse;
-      } else if (typeof exceptionResponse === 'object' && exceptionResponse !== null) {
+      } else if (
+        typeof exceptionResponse === 'object' &&
+        exceptionResponse !== null
+      ) {
         const resp = exceptionResponse as Record<string, unknown>;
         message = (resp['message'] as string) ?? exception.message;
 
@@ -63,7 +66,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
       return existingCode;
     }
 
-    switch (status) {
+    const statusCode: HttpStatus = status as HttpStatus;
+    switch (statusCode) {
       case HttpStatus.BAD_REQUEST:
         return 'VALIDATION_ERROR';
       case HttpStatus.UNAUTHORIZED:

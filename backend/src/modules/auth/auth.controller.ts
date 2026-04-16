@@ -9,7 +9,12 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiCookieAuth } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiCookieAuth,
+} from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import * as express from 'express';
 import { AuthService } from './auth.service';
@@ -34,12 +39,20 @@ export class AuthController {
     @Req() req: express.Request,
     @Res({ passthrough: true }) res: express.Response,
   ): Promise<{ message: string }> {
-    const ipAddress = (req.ip ?? req.socket.remoteAddress) ?? null;
+    const ipAddress = req.ip ?? req.socket.remoteAddress ?? null;
     const userAgent = (req.headers['user-agent'] as string) ?? null;
     const result = await this.authService.setup(dto.pin, ipAddress, userAgent);
 
-    const status = await this.authService.verifyPin(dto.pin, ipAddress, userAgent);
-    res.cookie('session_token', status.token, this.authService.getCookieOptions());
+    const status = await this.authService.verifyPin(
+      dto.pin,
+      ipAddress,
+      userAgent,
+    );
+    res.cookie(
+      'session_token',
+      status.token,
+      this.authService.getCookieOptions(),
+    );
 
     return result;
   }
@@ -57,11 +70,19 @@ export class AuthController {
     @Req() req: express.Request,
     @Res({ passthrough: true }) res: express.Response,
   ): Promise<{ message: string }> {
-    const ipAddress = (req.ip ?? req.socket.remoteAddress) ?? null;
+    const ipAddress = req.ip ?? req.socket.remoteAddress ?? null;
     const userAgent = (req.headers['user-agent'] as string) ?? null;
-    const result = await this.authService.verifyPin(dto.pin, ipAddress, userAgent);
+    const result = await this.authService.verifyPin(
+      dto.pin,
+      ipAddress,
+      userAgent,
+    );
 
-    res.cookie('session_token', result.token, this.authService.getCookieOptions());
+    res.cookie(
+      'session_token',
+      result.token,
+      this.authService.getCookieOptions(),
+    );
 
     return { message: result.message };
   }

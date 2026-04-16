@@ -1,6 +1,6 @@
 export interface StorageProvider {
   save(file: Express.Multer.File): Promise<StorageResult>;
-  delete(filePath: string): Promise<void>;
+  delete(filePath: string): void;
   getFilePath(storedName: string): string;
   getThumbnailPath(storedName: string): string;
 }

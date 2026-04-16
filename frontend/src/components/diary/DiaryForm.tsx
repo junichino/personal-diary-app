@@ -123,11 +123,10 @@ export function DiaryForm({ mode, initialData }: DiaryFormProps) {
             });
             router.push('/');
           },
-          onError: () => {
-            notifications.show({
-              message: 'เกิดข้อผิดพลาด กรุณาลองใหม่',
-              color: 'red',
-            });
+          onError: (error: unknown) => {
+            const axiosError = error as { response?: { data?: { message?: string } } };
+            const message = axiosError.response?.data?.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่';
+            notifications.show({ message, color: 'red' });
           },
         },
       );
@@ -155,11 +154,10 @@ export function DiaryForm({ mode, initialData }: DiaryFormProps) {
             });
             router.push(`/diary/${initialData!.id}`);
           },
-          onError: () => {
-            notifications.show({
-              message: 'เกิดข้อผิดพลาด กรุณาลองใหม่',
-              color: 'red',
-            });
+          onError: (error: unknown) => {
+            const axiosError = error as { response?: { data?: { message?: string } } };
+            const message = axiosError.response?.data?.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่';
+            notifications.show({ message, color: 'red' });
           },
         },
       );
