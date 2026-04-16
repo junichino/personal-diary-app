@@ -33,12 +33,16 @@ export class MediaController {
   @ApiParam({ name: 'storedName', type: 'string' })
   @ApiResponse({ status: 200, description: 'Image file' })
   @ApiResponse({ status: 404, description: 'File not found' })
-  async serveFile(
+  serveFile(
     @Param('storedName') storedName: string,
     @Res() res: express.Response,
-  ): Promise<void> {
+  ): void {
     // Validate storedName to prevent path traversal
-    if (storedName.includes('..') || storedName.includes('/') || storedName.includes('\\')) {
+    if (
+      storedName.includes('..') ||
+      storedName.includes('/') ||
+      storedName.includes('\\')
+    ) {
       throw new NotFoundException('File not found');
     }
 
@@ -67,12 +71,16 @@ export class MediaController {
   @ApiParam({ name: 'storedName', type: 'string' })
   @ApiResponse({ status: 200, description: 'Thumbnail file' })
   @ApiResponse({ status: 404, description: 'Thumbnail not found' })
-  async serveThumbnail(
+  serveThumbnail(
     @Param('storedName') storedName: string,
     @Res() res: express.Response,
-  ): Promise<void> {
+  ): void {
     // Validate storedName to prevent path traversal
-    if (storedName.includes('..') || storedName.includes('/') || storedName.includes('\\')) {
+    if (
+      storedName.includes('..') ||
+      storedName.includes('/') ||
+      storedName.includes('\\')
+    ) {
       throw new NotFoundException('File not found');
     }
 

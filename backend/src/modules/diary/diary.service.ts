@@ -59,7 +59,8 @@ export class DiaryService {
     }
 
     if (search) {
-      qb.andWhere('entry.content LIKE :search', { search: `%${search}%` });
+      const escaped = search.replace(/[%_]/g, '\\$&');
+      qb.andWhere('entry.content LIKE :search ESCAPE "\\"', { search: `%${escaped}%` });
     }
 
     if (isBookmarked !== undefined) {
@@ -129,8 +130,7 @@ export class DiaryService {
       weather: dto.weather ?? null,
       temperature: dto.temperature ?? null,
       entryDate: dto.entryDate ?? now.toISOString().split('T')[0],
-      entryTime:
-        dto.entryTime ?? now.toTimeString().split(' ')[0],
+      entryTime: dto.entryTime ?? now.toTimeString().split(' ')[0],
       isPinned: false,
       isBookmarked: false,
     });
@@ -168,7 +168,8 @@ export class DiaryService {
     if (dto.moodScore !== undefined) entry.moodScore = dto.moodScore ?? null;
     if (dto.location !== undefined) entry.location = dto.location ?? null;
     if (dto.weather !== undefined) entry.weather = dto.weather ?? null;
-    if (dto.temperature !== undefined) entry.temperature = dto.temperature ?? null;
+    if (dto.temperature !== undefined)
+      entry.temperature = dto.temperature ?? null;
     if (dto.entryDate !== undefined) entry.entryDate = dto.entryDate;
     if (dto.entryTime !== undefined) entry.entryTime = dto.entryTime;
     if (dto.isPinned !== undefined) entry.isPinned = dto.isPinned;

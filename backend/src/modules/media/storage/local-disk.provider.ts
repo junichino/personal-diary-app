@@ -79,7 +79,7 @@ export class LocalDiskProvider implements StorageProvider {
     };
   }
 
-  async delete(filePath: string): Promise<void> {
+  delete(filePath: string): void {
     const absolutePath = path.join(this.uploadDir, filePath);
     if (fs.existsSync(absolutePath)) {
       fs.unlinkSync(absolutePath);

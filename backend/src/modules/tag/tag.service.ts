@@ -40,7 +40,11 @@ export class TagService {
       id: tag.id,
       name: tag.name,
       color: tag.color,
-      entryCount: parseInt(tags.raw[index]?.['entryCount'] ?? '0', 10),
+      entryCount: Number(
+        (tags.raw[index] as Record<string, string> | undefined)?.[
+          'entryCount'
+        ] ?? 0,
+      ),
       createdAt: tag.createdAt,
     }));
   }

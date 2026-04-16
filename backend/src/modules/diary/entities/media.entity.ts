@@ -31,7 +31,12 @@ export class Media {
   @Column({ name: 'file_path', type: 'varchar', length: 500 })
   filePath: string;
 
-  @Column({ name: 'thumbnail_path', type: 'varchar', length: 500, nullable: true })
+  @Column({
+    name: 'thumbnail_path',
+    type: 'varchar',
+    length: 500,
+    nullable: true,
+  })
   thumbnailPath: string | null;
 
   @Column({ type: 'integer', nullable: true })

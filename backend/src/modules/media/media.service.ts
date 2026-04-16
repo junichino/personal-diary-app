@@ -78,9 +78,9 @@ export class MediaService {
     }
 
     // Delete files from disk
-    await this.storageProvider.delete(media.filePath);
+    this.storageProvider.delete(media.filePath);
     if (media.thumbnailPath) {
-      await this.storageProvider.delete(media.thumbnailPath);
+      this.storageProvider.delete(media.thumbnailPath);
     }
 
     await this.mediaRepository.remove(media);

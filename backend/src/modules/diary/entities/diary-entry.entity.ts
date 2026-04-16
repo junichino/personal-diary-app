@@ -68,6 +68,8 @@ export class DiaryEntry {
   @OneToMany(() => Media, (media) => media.diaryEntry, { cascade: true })
   media: Media[];
 
-  @OneToMany(() => DiaryTag, (diaryTag) => diaryTag.diaryEntry, { cascade: true })
+  @OneToMany(() => DiaryTag, (diaryTag) => diaryTag.diaryEntry, {
+    cascade: true,
+  })
   diaryTags: DiaryTag[];
 }

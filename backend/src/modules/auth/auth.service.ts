@@ -26,7 +26,9 @@ export class AuthService {
     ipAddress: string | null,
     userAgent: string | null,
   ): Promise<{ message: string }> {
-    const existing = await this.appSettingRepository.findOne({ where: { id: 1 } });
+    const existing = await this.appSettingRepository.findOne({
+      where: { id: 1 },
+    });
     if (existing) {
       throw new ConflictException('PIN has already been set up');
     }
@@ -53,7 +55,9 @@ export class AuthService {
     ipAddress: string | null,
     userAgent: string | null,
   ): Promise<{ message: string; token: string }> {
-    const setting = await this.appSettingRepository.findOne({ where: { id: 1 } });
+    const setting = await this.appSettingRepository.findOne({
+      where: { id: 1 },
+    });
     if (!setting) {
       throw new UnauthorizedException('PIN has not been set up yet');
     }
@@ -80,7 +84,9 @@ export class AuthService {
     currentPin: string,
     newPin: string,
   ): Promise<{ message: string }> {
-    const setting = await this.appSettingRepository.findOne({ where: { id: 1 } });
+    const setting = await this.appSettingRepository.findOne({
+      where: { id: 1 },
+    });
     if (!setting) {
       throw new UnauthorizedException('PIN has not been set up yet');
     }
@@ -103,7 +109,9 @@ export class AuthService {
   async getStatus(
     token: string | undefined,
   ): Promise<{ isSetup: boolean; isAuthenticated: boolean }> {
-    const setting = await this.appSettingRepository.findOne({ where: { id: 1 } });
+    const setting = await this.appSettingRepository.findOne({
+      where: { id: 1 },
+    });
     const isSetup = !!setting;
 
     let isAuthenticated = false;
@@ -125,7 +133,10 @@ export class AuthService {
     userAgent: string | null,
   ): Promise<Session> {
     const token = crypto.randomBytes(64).toString('hex');
-    const expiryHours = this.configService.get<number>('session.expiryHours', 72);
+    const expiryHours = this.configService.get<number>(
+      'session.expiryHours',
+      72,
+    );
     const expiresAt = new Date();
     expiresAt.setHours(expiresAt.getHours() + expiryHours);
 
@@ -146,7 +157,10 @@ export class AuthService {
     path: string;
     maxAge: number;
   } {
-    const expiryHours = this.configService.get<number>('session.expiryHours', 72);
+    const expiryHours = this.configService.get<number>(
+      'session.expiryHours',
+      72,
+    );
     return {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

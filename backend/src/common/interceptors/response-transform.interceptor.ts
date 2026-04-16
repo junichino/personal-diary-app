@@ -38,9 +38,10 @@ function isPaginatedResult(value: unknown): value is PaginatedResult<unknown> {
 }
 
 @Injectable()
-export class ResponseTransformInterceptor<T>
-  implements NestInterceptor<T, SuccessResponse<T>>
-{
+export class ResponseTransformInterceptor<T> implements NestInterceptor<
+  T,
+  SuccessResponse<T>
+> {
   intercept(
     _context: ExecutionContext,
     next: CallHandler,

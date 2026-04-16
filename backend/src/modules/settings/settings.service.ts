@@ -22,9 +22,13 @@ export class SettingsService {
   ) {}
 
   async getSettings(): Promise<SettingsResponse> {
-    const setting = await this.appSettingRepository.findOne({ where: { id: 1 } });
+    const setting = await this.appSettingRepository.findOne({
+      where: { id: 1 },
+    });
     if (!setting) {
-      throw new NotFoundException('Settings not found. Please setup PIN first.');
+      throw new NotFoundException(
+        'Settings not found. Please setup PIN first.',
+      );
     }
 
     return {
@@ -39,15 +43,20 @@ export class SettingsService {
   }
 
   async updateSettings(dto: UpdateSettingsDto): Promise<SettingsResponse> {
-    const setting = await this.appSettingRepository.findOne({ where: { id: 1 } });
+    const setting = await this.appSettingRepository.findOne({
+      where: { id: 1 },
+    });
     if (!setting) {
-      throw new NotFoundException('Settings not found. Please setup PIN first.');
+      throw new NotFoundException(
+        'Settings not found. Please setup PIN first.',
+      );
     }
 
     if (dto.appName !== undefined) setting.appName = dto.appName;
     if (dto.timezone !== undefined) setting.timezone = dto.timezone;
     if (dto.darkMode !== undefined) setting.darkMode = dto.darkMode;
-    if (dto.autoLockMinutes !== undefined) setting.autoLockMinutes = dto.autoLockMinutes;
+    if (dto.autoLockMinutes !== undefined)
+      setting.autoLockMinutes = dto.autoLockMinutes;
 
     const updated = await this.appSettingRepository.save(setting);
 

@@ -27,7 +27,11 @@ export class UpdateDiaryDto {
   @IsEnum(Mood)
   mood?: string;
 
-  @ApiPropertyOptional({ description: 'คะแนนอารมณ์ 1-5', minimum: 1, maximum: 5 })
+  @ApiPropertyOptional({
+    description: 'คะแนนอารมณ์ 1-5',
+    minimum: 1,
+    maximum: 5,
+  })
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
@@ -53,16 +57,23 @@ export class UpdateDiaryDto {
   @IsNumber()
   temperature?: number;
 
-  @ApiPropertyOptional({ description: 'วันที่ (YYYY-MM-DD)', example: '2026-03-24' })
+  @ApiPropertyOptional({
+    description: 'วันที่ (YYYY-MM-DD)',
+    example: '2026-03-24',
+  })
   @IsOptional()
   @IsString()
-  @Matches(/^\d{4}-\d{2}-\d{2}$/, { message: 'entryDate must be in YYYY-MM-DD format' })
+  @Matches(/^\d{4}-\d{2}-\d{2}$/, {
+    message: 'entryDate must be in YYYY-MM-DD format',
+  })
   entryDate?: string;
 
   @ApiPropertyOptional({ description: 'เวลา (HH:mm:ss)', example: '14:30:00' })
   @IsOptional()
   @IsString()
-  @Matches(/^\d{2}:\d{2}:\d{2}$/, { message: 'entryTime must be in HH:mm:ss format' })
+  @Matches(/^\d{2}:\d{2}:\d{2}$/, {
+    message: 'entryTime must be in HH:mm:ss format',
+  })
   entryTime?: string;
 
   @ApiPropertyOptional({ description: 'ปักหมุด' })
