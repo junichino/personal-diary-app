@@ -37,6 +37,7 @@ describe('DiaryService', () => {
     count: number,
   ): Partial<SelectQueryBuilder<DiaryEntry>> => ({
     leftJoinAndSelect: jest.fn().mockReturnThis(),
+    where: jest.fn().mockReturnThis(),
     andWhere: jest.fn().mockReturnThis(),
     orderBy: jest.fn().mockReturnThis(),
     addOrderBy: jest.fn().mockReturnThis(),
@@ -57,6 +58,7 @@ describe('DiaryService', () => {
             save: jest.fn(),
             findOne: jest.fn(),
             softRemove: jest.fn(),
+            softDelete: jest.fn(),
             createQueryBuilder: jest.fn(),
           },
         },
@@ -170,7 +172,7 @@ describe('DiaryService', () => {
       });
 
       expect(qb.andWhere).toHaveBeenCalledWith(
-        'entry.content LIKE :search ESCAPE "\\"',
+        "entry.content LIKE :search ESCAPE '!'",
         { search: '%test keyword%' },
       );
     });
@@ -233,6 +235,42 @@ describe('DiaryService', () => {
       });
 
       expect(result.meta.totalPages).toBe(5);
+    });
+
+    it('should filter out soft deleted entries (deletedAt IS NULL)', async () => {
+      const qb = createMockQueryBuilder([mockEntry], 1);
+      diaryRepo.createQueryBuilder.mockReturnValue(
+        qb as unknown as SelectQueryBuilder<DiaryEntry>,
+      );
+
+      await service.findAll({
+        page: 1,
+        limit: 20,
+        sortBy: 'createdAt',
+        sortOrder: 'DESC',
+      });
+
+      expect(qb.where).toHaveBeenCalledWith('entry.deletedAt IS NULL');
+    });
+
+    it('should escape LIKE wildcards in search using ! as escape char', async () => {
+      const qb = createMockQueryBuilder([], 0);
+      diaryRepo.createQueryBuilder.mockReturnValue(
+        qb as unknown as SelectQueryBuilder<DiaryEntry>,
+      );
+
+      await service.findAll({
+        page: 1,
+        limit: 20,
+        sortBy: 'createdAt',
+        sortOrder: 'DESC',
+        search: '100% discount_offer',
+      });
+
+      expect(qb.andWhere).toHaveBeenCalledWith(
+        "entry.content LIKE :search ESCAPE '!'",
+        { search: '%100!% discount!_offer%' },
+      );
     });
   });
 
@@ -434,17 +472,16 @@ describe('DiaryService', () => {
   });
 
   describe('remove', () => {
-    it('should soft delete diary entry', async () => {
+    it('should soft delete diary entry using softDelete (not softRemove)', async () => {
       diaryRepo.findOne.mockResolvedValue(mockEntry);
-      diaryRepo.softRemove.mockResolvedValue({
-        ...mockEntry,
-        deletedAt: new Date(),
-      });
+      diaryRepo.softDelete.mockResolvedValue({ affected: 1, raw: {}, generatedMaps: [] });
 
       const result = await service.remove(mockEntry.id);
 
       expect(result).toEqual({ message: 'Diary entry deleted' });
-      expect(diaryRepo.softRemove).toHaveBeenCalledWith(mockEntry);
+      // Must use softDelete(id) not softRemove(entity) to avoid cascade issues
+      expect(diaryRepo.softDelete).toHaveBeenCalledWith(mockEntry.id);
+      expect(diaryRepo.softRemove).not.toHaveBeenCalled();
     });
 
     it('should throw NotFoundException when entry not found', async () => {

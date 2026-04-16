@@ -13,7 +13,7 @@ export interface DiaryEntry {
   createdAt: string;
   updatedAt: string;
   media: Media[];
-  tags: Tag[];
+  tags?: Tag[];
 }
 
 export interface Media {
